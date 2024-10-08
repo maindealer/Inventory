@@ -6,7 +6,7 @@ st.title("📦재고관리 앱📦")
 # 초기 데이터프레임 설정
 initial_data = pd.DataFrame(
     [
-        {"부품명": "", "개수": 0, "배송여부": False}
+        {"부품명": "", "개수(개)": 0, "보유함": False, "구매 예정": False, "배송 중": False}
     ]
 )
 
@@ -35,8 +35,17 @@ edited_df = st.data_editor(st.session_state.data)
 # 부품 추가 기능
 st.subheader("부품 추가")
 부품명 = st.text_input("부품명", key='부품명')
-개수 = st.number_input("개수", min_value=0, key='개수')
-배송여부 = st.checkbox("배송여부", key='배송여부')
+
+# 개수(개)를 기본 1로 설정
+개수 = st.number_input("개수(개)", min_value=0, value=1, key='개수(개)')
+
+# "보유함", "구매 예정", "배송 중" 중 하나만 선택할 수 있게 라디오 버튼 사용
+상태 = st.radio("상태 선택", ('보유함', '구매 예정', '배송 중'), key='상태')
+
+# 각 상태에 맞는 체크박스 값을 결정
+보유함 = 상태 == '보유함'
+구매예정 = 상태 == '구매 예정'
+배송중 = 상태 == '배송 중'
 
 if st.button("부품 추가"):
     # 비어있는 행 찾기
@@ -46,11 +55,19 @@ if st.button("부품 추가"):
         # 비어있는 첫 번째 행에 추가
         first_empty_index = empty_row_index[0]
         st.session_state.data.at[first_empty_index, '부품명'] = 부품명
-        st.session_state.data.at[first_empty_index, '개수'] = 개수
-        st.session_state.data.at[first_empty_index, '배송여부'] = 배송여부
+        st.session_state.data.at[first_empty_index, '개수(개)'] = 개수
+        st.session_state.data.at[first_empty_index, '보유함'] = 보유함
+        st.session_state.data.at[first_empty_index, '구매 예정'] = 구매예정
+        st.session_state.data.at[first_empty_index, '배송 중'] = 배송중
     else:
         # 비어있는 행이 없으면 새로운 행 추가
-        new_row = pd.DataFrame({"부품명": [부품명], "개수": [개수], "배송여부": [배송여부]})
+        new_row = pd.DataFrame({
+            "부품명": [부품명], 
+            "개수(개)": [개수], 
+            "보유함": [보유함], 
+            "구매 예정": [구매예정], 
+            "배송 중": [배송중]
+        })
         st.session_state.data = pd.concat([st.session_state.data, new_row], ignore_index=True)
 
     st.success("부품이 추가되었습니다!")
