@@ -7,9 +7,7 @@ st.title('재고관리 앱')
 if 'data' not in st.session_state:
     st.session_state.data = pd.DataFrame(
         [
-            {"부품명": "", "개수": 0, "배송여부": False},
-            {"부품명": "", "개수": 0, "배송여부": False},
-            {"부품명": "", "개수": 0, "배송여부": False},
+            {"부품명": "", "개수": 0, "배송여부": False}
         ]
     )
 
