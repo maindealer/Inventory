@@ -26,8 +26,20 @@ st.subheader("부품 추가")
 배송여부 = st.checkbox("배송여부", key='배송여부')
 
 if st.button("부품 추가"):
-    new_row = pd.DataFrame({"부품명": [부품명], "개수": [개수], "배송여부": [배송여부]})
-    st.session_state.data = pd.concat([st.session_state.data, new_row], ignore_index=True)
+    # 비어있는 행 찾기
+    empty_row_index = st.session_state.data[st.session_state.data['부품명'] == ""].index
+
+    if not empty_row_index.empty:
+        # 비어있는 첫 번째 행에 추가
+        first_empty_index = empty_row_index[0]
+        st.session_state.data.at[first_empty_index, '부품명'] = 부품명
+        st.session_state.data.at[first_empty_index, '개수'] = 개수
+        st.session_state.data.at[first_empty_index, '배송여부'] = 배송여부
+    else:
+        # 비어있는 행이 없으면 새로운 행 추가
+        new_row = pd.DataFrame({"부품명": [부품명], "개수": [개수], "배송여부": [배송여부]})
+        st.session_state.data = pd.concat([st.session_state.data, new_row], ignore_index=True)
+
     st.success("부품이 추가되었습니다!")
 
 # 최종 수정된 데이터프레임 표시
