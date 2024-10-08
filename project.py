@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-st.title('재고관리 앱')
+st.title("📦재고관리 앱📦")
 
 # 초기 데이터프레임
 if 'data' not in st.session_state:
