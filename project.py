@@ -1,6 +1,30 @@
 import streamlit as st
 import pandas as pd
 
+# 탭 구성
+tab1, tab2, tab3, tab4 = st.tabs(["전체 재고", "보유함", "구매 예정", "배송 중"])
+
+# 전체 재고 탭 내용
+with tab1:
+    st.header("전체 재고")
+    st.write("여기에 전체 재고 리스트를 표시합니다.")
+
+# 보유함 탭 내용
+with tab2:
+    st.header("보유함")
+    st.write("현재 보유 중인 재고를 표시합니다.")
+
+# 구매 예정 탭 내용
+with tab3:
+    st.header("구매 예정")
+    st.write("구매 예정인 항목들을 표시합니다.")
+
+# 배송 중 탭 내용
+with tab4:
+    st.header("배송 중")
+    st.write("배송 중인 항목들을 표시합니다.")
+
+
 st.title("📦재고관리 앱📦")
 
 # 초기 데이터프레임 설정
@@ -20,14 +44,10 @@ uploaded_file = st.file_uploader("CSV 파일 업로드", type='csv')
 # 파일이 업로드되었을 때 세션 상태에 데이터 업데이트
 if uploaded_file is not None:
     st.session_state.data = pd.read_csv(uploaded_file)
-elif uploaded_file is None and 'uploaded' in st.session_state:
-    # 파일이 제거된 경우 초기 데이터프레임으로 복원
-    st.session_state.data = initial_data
-    del st.session_state['uploaded']
-
-# 파일이 업로드된 상태 저장
-if uploaded_file:
     st.session_state['uploaded'] = True
+elif uploaded_file is None and 'uploaded' not in st.session_state:
+    # 파일이 없을 때는 초기 데이터로 복원
+    st.session_state.data = initial_data
 
 # 데이터 수정 가능한 에디터
 edited_df = st.data_editor(st.session_state.data)
@@ -71,6 +91,8 @@ if st.button("부품 추가"):
         st.session_state.data = pd.concat([st.session_state.data, new_row], ignore_index=True)
 
     st.success("부품이 추가되었습니다!")
+else:
+    st.warning("부품명과 개수를 확인하세요.")
 
 # 최종 수정된 데이터프레임 표시
 st.subheader("수정된 재고 리스트")
