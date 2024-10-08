@@ -110,3 +110,25 @@ if st.button("다운로드"):
         file_name=file_name,
         mime='text/csv',
     )
+
+# 사이드바에 여러 가지 위젯을 추가
+sidebar = st.sidebar
+
+# 사이드바에 버튼으로 "전체 재고" 추가
+if st.sidebar.button('전체 재고'):
+    st.sidebar.write("전체 재고를 클릭했습니다!")
+
+st.sidebar.markdown("  - **보유함**")
+st.sidebar.markdown("  - **구매 예정**")
+st.sidebar.markdown("  - **배송 중**")
+
+
+# 사이드바에 재고 수정 타이틀 추가
+st.sidebar.title('재고 수정')
+
+st.sidebar.text('데이터 공유')
+
+
+# 사이드바에 텍스트 링크처럼 보이는 클릭 가능한 항목 추가
+if st.sidebar.markdown('[전체 재고](#)', unsafe_allow_html=True):
+    st.sidebar.write("전체 재고를 클릭했습니다!")
