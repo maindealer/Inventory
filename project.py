@@ -3,18 +3,31 @@ import pandas as pd
 
 st.title("📦재고관리 앱📦")
 
-# 초기 데이터프레임
+# 초기 데이터프레임 설정
+initial_data = pd.DataFrame(
+    [
+        {"부품명": "", "개수": 0, "배송여부": False}
+    ]
+)
+
+# 세션 상태에 초기화된 데이터가 없으면 기본값 설정
 if 'data' not in st.session_state:
-    st.session_state.data = pd.DataFrame(
-        [
-            {"부품명": "", "개수": 0, "배송여부": False}
-        ]
-    )
+    st.session_state.data = initial_data
 
 # CSV 파일 업로드 기능
 uploaded_file = st.file_uploader("CSV 파일 업로드", type='csv')
+
+# 파일이 업로드되었을 때 세션 상태에 데이터 업데이트
 if uploaded_file is not None:
     st.session_state.data = pd.read_csv(uploaded_file)
+elif uploaded_file is None and 'uploaded' in st.session_state:
+    # 파일이 제거된 경우 초기 데이터프레임으로 복원
+    st.session_state.data = initial_data
+    del st.session_state['uploaded']
+
+# 파일이 업로드된 상태 저장
+if uploaded_file:
+    st.session_state['uploaded'] = True
 
 # 데이터 수정 가능한 에디터
 edited_df = st.data_editor(st.session_state.data)
