@@ -18,12 +18,6 @@ initial_data = pd.DataFrame(
 if 'data' not in st.session_state:
     st.session_state.data = initial_data
 
-# 데이터 병합 함수: 같은 부품명과 상태가 같으면 개수를 합침
-def merge_duplicate_entries(df):
-    merged_df = df.groupby(['부품명', '보유함', '구매 예정', '배송 중', '구매일자'], as_index=False).agg({'개수(개)': 'sum'})
-    merged_df = merged_df[['부품명', '개수(개)', '보유함', '구매 예정', '배송 중', '구매일자']]
-    return merged_df
-
 # 페이지에 따른 콘텐츠 출력
 if page == "📊 재고 데이터베이스":
     st.header("📊 재고 데이터베이스")
@@ -39,31 +33,27 @@ if page == "📊 재고 데이터베이스":
         # 파일이 없을 때는 초기 데이터로 복원
         st.session_state.data = initial_data
 
-    # 데이터를 병합하여 중복된 부품을 합침
-    merged_data = merge_duplicate_entries(st.session_state.data)
-    st.session_state.merged_data = merged_data  # 병합된 데이터를 세션 상태에 저장
-
     # 탭 구성
     tab1, tab2, tab3, tab4 = st.tabs(["🗃 전체 재고", "✅ 보유함", "🛒 구매 예정", "📦 배송 중"])
 
     # 각 탭별 재고 데이터 표시
     with tab1:
         st.subheader("🗃 전체 재고")
-        st.dataframe(merged_data.style.set_properties(subset=['부품명'], **{'width': '300px'}))
+        st.dataframe(st.session_state.data.style.set_properties(subset=['부품명'], **{'width': '300px'}))
 
     with tab2:
         st.subheader("✅ 보유함")
-        stock_data = merged_data[merged_data['보유함']]
+        stock_data = st.session_state.data[st.session_state.data['보유함']]
         st.dataframe(stock_data.style.set_properties(subset=['부품명'], **{'width': '300px'}))
 
     with tab3:
         st.subheader("🛒 구매 예정")
-        purchase_data = merged_data[merged_data['구매 예정']]
+        purchase_data = st.session_state.data[st.session_state.data['구매 예정']]
         st.dataframe(purchase_data.style.set_properties(subset=['부품명'], **{'width': '300px'}))
 
     with tab4:
         st.subheader("📦 배송 중")
-        delivery_data = merged_data[merged_data['배송 중']]
+        delivery_data = st.session_state.data[st.session_state.data['배송 중']]
         st.dataframe(delivery_data.style.set_properties(subset=['부품명'], **{'width': '300px'}))
 
 elif page == "🛠 재고 수정":
@@ -71,12 +61,12 @@ elif page == "🛠 재고 수정":
     if 'uploaded' in st.session_state and st.session_state['uploaded']:
         st.header("🛠 재고 수정")
         
-        # 병합된 데이터를 재고 수정 페이지에서 사용
-        if 'merged_data' in st.session_state:
+        # 업로드된 데이터를 재고 수정 페이지에서 사용
+        if 'data' in st.session_state:
             
             # 세션 상태에 임시 데이터를 저장
             if 'temp_data' not in st.session_state:
-                st.session_state.temp_data = st.session_state.merged_data.copy()
+                st.session_state.temp_data = st.session_state.data.copy()
             
             # 수정 가능한 테이블을 위해 각 열에 대한 동작 제어
             def enforce_unique_selection(row):
@@ -107,7 +97,7 @@ elif page == "🛠 재고 수정":
             
             # 저장 버튼
             if st.button("✅ 저장"):
-                st.session_state.merged_data = st.session_state.temp_data.copy()
+                st.session_state.data = st.session_state.temp_data.copy()
                 st.success("변경 사항이 저장되었습니다.")
             
             # 업데이트된 데이터 출력
