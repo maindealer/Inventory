@@ -1,0 +1,31 @@
+부품명,개수(개),보유함,구매 예정,배송 중
+Breadboard,42,False,True,False
+Bluetooth Module,51,False,False,True
+Arduino Uno,19,True,False,False
+Arduino Nano,74,True,False,False
+Breadboard,7,False,True,False
+Temperature Sensor,54,True,False,False
+Arduino Uno,89,False,False,True
+Arduino Nano,42,False,False,True
+Servo Motor,9,True,False,False
+Temperature Sensor,30,True,False,False
+Breadboard,34,True,False,False
+Breadboard,93,False,False,True
+Jumper Wires,39,False,False,True
+Servo Motor,84,True,False,False
+Servo Motor,21,False,False,True
+Arduino Uno,2,False,False,True
+Breadboard,87,False,True,False
+Temperature Sensor,41,False,False,True
+Arduino Uno,33,False,False,True
+Temperature Sensor,94,False,False,True
+LED Module,28,False,False,True
+Servo Motor,42,False,False,True
+Servo Motor,80,True,False,False
+Arduino Uno,77,True,False,False
+Arduino Nano,20,True,False,False
+Jumper Wires,43,False,True,False
+Arduino Mega,44,False,False,True
+Breadboard,34,False,True,False
+Temperature Sensor,70,False,False,True
+Servo Motor,86,True,False,False
