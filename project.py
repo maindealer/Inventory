@@ -33,6 +33,28 @@ if page == "📊 재고 데이터베이스":
         # 파일이 없을 때는 초기 데이터로 복원
         st.session_state.data = initial_data
 
+    # 부품명 검색 입력창 추가
+    search_part = st.text_input("🔍 부품명 검색", "")
+
+    # 검색한 부품명으로 데이터 필터링
+    if search_part:
+        # 대소문자를 구분하지 않고, 부품명이 완전히 일치하는 행을 검색
+        search_results = st.session_state.data[
+            st.session_state.data['부품명'].str.lower() == search_part.lower()
+        ]
+        
+        if not search_results.empty:
+            # "보유함"에 있는 부품 필터링
+            in_stock = search_results[search_results['보유함']]
+            
+            # 총 개수 계산
+            total_count = in_stock['개수(개)'].sum() if not in_stock.empty else 0
+            
+            st.write(f"**'{search_part}' 부품의 총 개수는 {total_count}개 입니다.**")
+        else:
+            st.write(f"**'{search_part}' 부품을 찾을 수 없습니다.**")
+
+    
     # 탭 구성
     tab1, tab2, tab3, tab4 = st.tabs(["🗃 전체 재고", "✅ 보유함", "🛒 구매 예정", "📦 배송 중"])
 
