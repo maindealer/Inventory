@@ -1,6 +1,11 @@
 import streamlit as st
 import pandas as pd
 
+st.title("📦재고관리 앱📦")
+
+# CSV 파일 업로드 기능
+uploaded_file = st.file_uploader("CSV 파일 업로드", type='csv')
+
 # 탭 구성
 tab1, tab2, tab3, tab4 = st.tabs(["전체 재고", "보유함", "구매 예정", "배송 중"])
 
@@ -24,9 +29,6 @@ with tab4:
     st.header("배송 중")
     st.write("배송 중인 항목들을 표시합니다.")
 
-
-st.title("📦재고관리 앱📦")
-
 # 초기 데이터프레임 설정
 initial_data = pd.DataFrame(
     [
@@ -37,9 +39,6 @@ initial_data = pd.DataFrame(
 # 세션 상태에 초기화된 데이터가 없으면 기본값 설정
 if 'data' not in st.session_state:
     st.session_state.data = initial_data
-
-# CSV 파일 업로드 기능
-uploaded_file = st.file_uploader("CSV 파일 업로드", type='csv')
 
 # 파일이 업로드되었을 때 세션 상태에 데이터 업데이트
 if uploaded_file is not None:
@@ -57,7 +56,7 @@ st.subheader("부품 추가")
 부품명 = st.text_input("부품명", key='부품명')
 
 # 개수(개)를 기본 1로 설정
-개수 = st.number_input("개수(개)", min_value=0, value=1, key='개수(개)')
+개수 = st.number_input("개수(개)", min_value=1, value=1, key='개수(개)')
 
 # "보유함", "구매 예정", "배송 중" 중 하나만 선택할 수 있게 라디오 버튼 사용
 상태 = st.radio("상태 선택", ('보유함', '구매 예정', '배송 중'), key='상태')
