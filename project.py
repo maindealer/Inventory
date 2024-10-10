@@ -3,9 +3,6 @@ import pandas as pd
 
 st.title("📦재고관리 앱📦")
 
-# CSV 파일 업로드 기능
-uploaded_file = st.file_uploader("CSV 파일 업로드", type='csv')
-
 # 사이드바에 버튼 추가
 st.sidebar.title("📦재고관리 앱📦")
 page = st.sidebar.radio("", ("재고 데이터베이스", "재고 수정"))
@@ -21,14 +18,6 @@ initial_data = pd.DataFrame(
 if 'data' not in st.session_state:
     st.session_state.data = initial_data
 
-# 파일이 업로드되었을 때 세션 상태에 데이터 업데이트
-if uploaded_file is not None:
-    st.session_state.data = pd.read_csv(uploaded_file)
-    st.session_state['uploaded'] = True
-elif uploaded_file is None and 'uploaded' not in st.session_state:
-    # 파일이 없을 때는 초기 데이터로 복원
-    st.session_state.data = initial_data
-
 # 데이터 병합 함수: 같은 부품명과 상태가 같으면 개수를 합침
 def merge_duplicate_entries(df):
     merged_df = df.groupby(['부품명', '보유함', '구매 예정', '배송 중', '구매일자'], as_index=False).agg({'개수(개)': 'sum'})
@@ -39,6 +28,17 @@ def merge_duplicate_entries(df):
 if page == "재고 데이터베이스":
     st.header("재고 데이터베이스")
     
+    # CSV 파일 업로드 기능을 이곳에 추가
+    uploaded_file = st.file_uploader("CSV 파일 업로드", type='csv')
+
+    # 파일이 업로드되었을 때 세션 상태에 데이터 업데이트
+    if uploaded_file is not None:
+        st.session_state.data = pd.read_csv(uploaded_file)
+        st.session_state['uploaded'] = True
+    elif uploaded_file is None and 'uploaded' not in st.session_state:
+        # 파일이 없을 때는 초기 데이터로 복원
+        st.session_state.data = initial_data
+
     # 데이터를 병합하여 중복된 부품을 합침
     merged_data = merge_duplicate_entries(st.session_state.data)
     st.session_state.merged_data = merged_data  # 병합된 데이터를 세션 상태에 저장
