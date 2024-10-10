@@ -1,0 +1,21 @@
+부품명,개수(개),보유함,구매 예정,배송 중,구매일자
+Arduino UNO,32,True,False,False,2023-05-20
+Breadboard,76,False,True,True,2024-01-12
+Jumper Wires,50,True,True,False,2023-11-15
+Resistor Kit,12,True,False,True,2024-02-27
+LED Kit,64,True,True,False,2023-10-05
+RGB LED,85,True,False,True,2023-06-17
+Servo Motor,23,False,True,True,2023-09-14
+DC Motor,89,True,True,False,2024-03-02
+Ultrasonic Sensor,53,True,False,True,2024-04-21
+IR Receiver,35,True,True,False,2023-05-13
+Power Supply Module,12,True,False,True,2023-12-30
+Temperature Sensor,58,True,True,False,2023-07-22
+Humidity Sensor,77,True,False,True,2024-05-10
+Motor Driver,27,False,True,False,2023-09-06
+Relay Module,68,False,True,True,2024-04-02
+Proto Shield,99,True,False,True,2024-02-17
+Stepper Motor,7,True,False,False,2024-05-07
+LCD Display,21,True,True,False,2023-11-02
+Switch Button,39,False,True,True,2024-01-20
+Buzzer,18,True,False,True,2023-07-04
