@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import io
 
 st.title("📦재고관리 앱📦")
 
@@ -32,7 +33,7 @@ if page == "📊 재고 데이터베이스":
     elif uploaded_file is None and 'uploaded' not in st.session_state:
         # 파일이 없을 때는 초기 데이터로 복원
         st.session_state.data = initial_data
- 
+
     # 탭 구성
     tab1, tab2, tab3, tab4 = st.tabs(["🗃 전체 재고", "✅ 보유함", "🛒 구매 예정", "📦 배송 중"])
 
@@ -56,7 +57,7 @@ if page == "📊 재고 데이터베이스":
         delivery_data = st.session_state.data[st.session_state.data['배송 중']]
         st.dataframe(delivery_data.style.set_properties(subset=['부품명'], **{'width': '300px'}))
 
- # 부품명 검색 입력창 추가
+    # 부품명 검색 입력창 추가
     search_part = st.text_input("🔍 부품명 검색", "")
 
     # 검색한 부품명으로 데이터 필터링
@@ -132,5 +133,19 @@ elif page == "🛠 재고 수정":
             # 업데이트된 데이터 출력
             st.subheader("수정된 데이터")
             st.dataframe(st.session_state.temp_data)
+
+            # CSV 파일 이름 입력
+            file_name = st.text_input("📁 저장할 파일 이름을 입력하세요.")
+            
+            # CSV 다운로드 버튼 추가
+            if st.button("💾 수정된 데이터 CSV로 저장"):
+                # 파일명으로 수정된 데이터를 저장
+                csv = st.session_state.temp_data.to_csv(index=False)
+                st.download_button(
+                    label="다운로드",
+                    data=csv,
+                    file_name=f"{file_name}",
+                    mime="text/csv"
+                )
     else:
         st.warning("재고 수정 페이지에 들어가기 위해서는 먼저 CSV 파일을 업로드해야 합니다.")
