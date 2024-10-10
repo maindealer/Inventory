@@ -70,48 +70,52 @@ if page == "재고 데이터베이스":
         st.dataframe(delivery_data.style.set_properties(subset=['부품명'], **{'width': '300px'}))
 
 elif page == "재고 수정":
-    st.header("재고 수정")
-    
-    # 병합된 데이터를 재고 수정 페이지에서 사용
-    if 'merged_data' in st.session_state:
-        st.subheader("수정 가능한 재고 리스트")
+    # CSV 파일이 업로드된 경우에만 재고 수정 페이지 표시
+    if 'uploaded' in st.session_state and st.session_state['uploaded']:
+        st.header("재고 수정")
         
-        # 세션 상태에 임시 데이터를 저장
-        if 'temp_data' not in st.session_state:
-            st.session_state.temp_data = st.session_state.merged_data.copy()
-        
-        # 수정 가능한 테이블을 위해 각 열에 대한 동작 제어
-        def enforce_unique_selection(row):
-            """
-            보유함, 구매 예정, 배송 중 중 하나만 True가 되도록 하는 함수.
-            """
-            # 하나의 열만 True로 설정
-            if row['보유함']:
-                row['구매 예정'] = False
-                row['배송 중'] = False
-            elif row['구매 예정']:
-                row['보유함'] = False
-                row['배송 중'] = False
-            elif row['배송 중']:
-                row['보유함'] = False
-                row['구매 예정'] = False
-            return row
+        # 병합된 데이터를 재고 수정 페이지에서 사용
+        if 'merged_data' in st.session_state:
+            st.subheader("수정 가능한 재고 리스트")
+            
+            # 세션 상태에 임시 데이터를 저장
+            if 'temp_data' not in st.session_state:
+                st.session_state.temp_data = st.session_state.merged_data.copy()
+            
+            # 수정 가능한 테이블을 위해 각 열에 대한 동작 제어
+            def enforce_unique_selection(row):
+                """
+                보유함, 구매 예정, 배송 중 중 하나만 True가 되도록 하는 함수.
+                """
+                # 하나의 열만 True로 설정
+                if row['보유함']:
+                    row['구매 예정'] = False
+                    row['배송 중'] = False
+                elif row['구매 예정']:
+                    row['보유함'] = False
+                    row['배송 중'] = False
+                elif row['배송 중']:
+                    row['보유함'] = False
+                    row['구매 예정'] = False
+                return row
 
-        # 수정된 데이터는 세션 상태의 임시 데이터에 저장
-        edited_data = st.data_editor(
-            st.session_state.temp_data,
-            num_rows="dynamic",
-            key="editable_inventory"
-        )
-        
-        # 유일 선택 강제 적용
-        st.session_state.temp_data = edited_data.apply(enforce_unique_selection, axis=1)
-        
-        # 저장 버튼 추가
-        if st.button("저장"):
-            st.session_state.merged_data = st.session_state.temp_data.copy()
-            st.success("변경 사항이 저장되었습니다.")
-        
-        # 업데이트된 데이터 출력
-        st.subheader("수정된 데이터")
-        st.dataframe(st.session_state.temp_data)
+            # 수정된 데이터는 세션 상태의 임시 데이터에 저장
+            edited_data = st.data_editor(
+                st.session_state.temp_data,
+                num_rows="dynamic",
+                key="editable_inventory"
+            )
+            
+            # 유일 선택 강제 적용
+            st.session_state.temp_data = edited_data.apply(enforce_unique_selection, axis=1)
+            
+            # 저장 버튼 추가
+            if st.button("저장"):
+                st.session_state.merged_data = st.session_state.temp_data.copy()
+                st.success("변경 사항이 저장되었습니다.")
+            
+            # 업데이트된 데이터 출력
+            st.subheader("수정된 데이터")
+            st.dataframe(st.session_state.temp_data)
+    else:
+        st.warning("재고 수정 페이지에 들어가기 위해서는 먼저 CSV 파일을 업로드해야 합니다.")
