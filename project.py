@@ -148,4 +148,4 @@ elif page == "🛠 재고 수정":
                     mime="text/csv"
                 )
     else:
-        st.warning("재고 수정 페이지에 들어가기 위해서는 먼저 CSV 파일을 업로드해야 합니다.")
+        st.warning("재고 수정 페이지에 들어가기 위해서는, 먼저 CSV 파일을 업로드해야 합니다.")
